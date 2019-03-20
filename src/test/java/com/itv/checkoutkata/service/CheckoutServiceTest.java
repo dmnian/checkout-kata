@@ -13,7 +13,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
 public class CheckoutServiceTest {
 
@@ -80,5 +80,24 @@ public class CheckoutServiceTest {
         assertEquals(1, recentCheckouts.size());
         assertEquals(0, checkoutDTO.getItems().size());
         assertEquals(uuid, checkout.getUuid());
+    }
+
+    @Test
+    public void calculateCheckoutDoesNotExistTest() {
+        int result = checkoutService.calculate("some-unexisting-uuid");
+
+        assertEquals(0, result);
+    }
+
+    @Test
+    public void calculateCheckoutTest() {
+        Checkout checkoutMock = mock(Checkout.class);
+        when(checkoutMock.calculate()).thenReturn(1);
+        recentCheckouts.put("some-uuid", checkoutMock);
+
+        int result = checkoutService.calculate("some-uuid");
+
+        verify(checkoutMock, times(1)).calculate();
+        assertEquals(1, result);
     }
 }

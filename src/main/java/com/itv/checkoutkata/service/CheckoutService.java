@@ -98,4 +98,13 @@ public class CheckoutService {
     public void setRecentCheckouts(Map<String, Checkout> recentCheckouts) {
         this.recentCheckouts = recentCheckouts;
     }
+
+    public int calculate(String uuid) {
+        Checkout checkout = recentCheckouts.get(uuid);
+
+        if (checkout != null) {
+            return checkout.calculate();
+        }
+        return 0;
+    }
 }
