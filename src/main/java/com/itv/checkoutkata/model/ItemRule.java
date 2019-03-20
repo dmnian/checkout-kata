@@ -1,24 +1,24 @@
 package com.itv.checkoutkata.model;
 
 public class ItemRule {
-    private String itemRule;
+    private String itemName;
 
     private int itemCount;
 
     private int specialPrice;
 
-    public ItemRule(String itemRule, int itemCount, int specialPrice) {
-        this.itemRule = itemRule;
+    public ItemRule(String itemName, int itemCount, int specialPrice) {
+        this.itemName = itemName;
         this.itemCount = itemCount;
         this.specialPrice = specialPrice;
     }
 
-    public String getItemRule() {
-        return itemRule;
+    public String getItemName() {
+        return itemName;
     }
 
-    public void setItemRule(String itemRule) {
-        this.itemRule = itemRule;
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
     }
 
     public int getItemCount() {

@@ -8,15 +8,18 @@ import static org.junit.Assert.*;
 public class CheckoutTest {
 
     private Checkout checkout;
+    private Item itemA;
 
     @Before
     public void setUp() throws Exception {
         checkout = new Checkout();
+
+        itemA = new Item("A", 50);
     }
 
     @Test
     public void scanItemSuccessTest() {
-        boolean scan = checkout.scan(new Item("A", 50));
+        boolean scan = checkout.scan(itemA);
 
         assertTrue(scan);
         assertEquals(1, checkout.getItems().size());
@@ -28,5 +31,31 @@ public class CheckoutTest {
 
         assertFalse(scan);
         assertTrue(checkout.getItems().isEmpty());
+    }
+
+    @Test
+    public void cancelItemTest() {
+        checkout.scan(itemA);
+        checkout.scan(itemA);
+        checkout.scan(itemA);
+
+        boolean result = checkout.cancelItem(itemA);
+
+        assertTrue(result);
+        assertEquals(2, checkout.getItems().size());
+    }
+
+    @Test
+    public void addItemRuleSuccessTest() {
+        boolean result = checkout.addItemRule(new ItemRule("A", 3, 130));
+
+        assertTrue(result);
+    }
+
+    @Test
+    public void addItemRuleFailureTest() {
+        boolean result = checkout.addItemRule(null);
+
+        assertFalse(result);
     }
 }
