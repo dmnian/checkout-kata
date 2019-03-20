@@ -13,6 +13,9 @@ public class ItemRule {
         this.specialPrice = specialPrice;
     }
 
+    public ItemRule() {
+    }
+
     public String getItemName() {
         return itemName;
     }
