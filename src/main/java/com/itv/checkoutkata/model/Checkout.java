@@ -11,6 +11,8 @@ public class Checkout {
     private List<Item> items;
     private List<ItemRule> itemRules;
 
+    private String uuid;
+
     public Checkout() {
         items = new ArrayList<>();
         itemRules = new ArrayList<>();
@@ -22,6 +24,14 @@ public class Checkout {
         }
 
         return false;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public List<Item> getItems() {
