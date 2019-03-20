@@ -81,10 +81,10 @@ public class Checkout {
                     sum.addAndGet(numberOfPromotions * specialPrice);
                     sum.addAndGet(groupItems.size() % itemRule.getItemCount() * specialPrice);
                 } else {
-
+                    sum.addAndGet(groupItems.size() * groupItems.get(0).getPrice());
                 }
             } else {
-
+                sum.addAndGet(groupItems.size() * groupItems.get(0).getPrice());
             }
         });
 

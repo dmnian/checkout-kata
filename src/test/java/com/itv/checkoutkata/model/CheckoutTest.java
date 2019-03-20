@@ -9,14 +9,23 @@ public class CheckoutTest {
 
     private Checkout checkout;
     private Item itemA;
+    private Item itemB;
+    private Item itemC;
+    private Item itemD;
     private ItemRule itemRuleA;
+    private ItemRule itemRuleB;
 
     @Before
     public void setUp() throws Exception {
         checkout = new Checkout();
 
         itemA = new Item("A", 50);
+        itemB = new Item("B", 30);
+        itemC = new Item("C", 20);
+        itemD = new Item("D", 15);
+
         itemRuleA = new ItemRule("A", 3, 130);
+        itemRuleB = new ItemRule("B", 2, 45);
     }
 
     @Test
@@ -73,7 +82,7 @@ public class CheckoutTest {
     }
 
     @Test
-    public void calculateItemsWithSingleRuleTest() {
+    public void calculateItemsWithSingleRuleThatExistTest() {
         checkout.addItemRule(itemRuleA);
 
         checkout.scan(itemA);
@@ -84,4 +93,83 @@ public class CheckoutTest {
 
         assertEquals(130, result);
     }
+
+    @Test
+    public void calculateItemsWithSingleRuleDifferentRuleExistTest() {
+        checkout.addItemRule(itemRuleB);
+
+        checkout.scan(itemA);
+        checkout.scan(itemA);
+
+        int result = checkout.calculate();
+
+        assertEquals(100, result);
+    }
+
+    @Test
+    public void calculateItemsWithSingleRuleNoPromotionTest() {
+        checkout.addItemRule(itemRuleA);
+
+        checkout.scan(itemA);
+        checkout.scan(itemA);
+
+        int result = checkout.calculate();
+
+        assertEquals(100, result);
+    }
+
+    @Test
+    public void calculateItemsWithManyOrderedRulesTest() {
+        checkout.addItemRule(itemRuleA);
+        checkout.addItemRule(itemRuleB);
+
+        checkout.scan(itemA);
+        checkout.scan(itemA);
+        checkout.scan(itemA);
+        checkout.scan(itemA);
+        checkout.scan(itemA);
+        checkout.scan(itemA);
+        checkout.scan(itemB);
+        checkout.scan(itemB);
+
+        int result = checkout.calculate();
+
+        assertEquals(2 * 130 + 45, result);
+    }
+
+    @Test
+    public void calculateItemsWithManyUnorderedRulesTest() {
+        checkout.addItemRule(itemRuleA);
+        checkout.addItemRule(itemRuleB);
+
+        checkout.scan(itemA);
+        checkout.scan(itemB);
+        checkout.scan(itemA);
+        checkout.scan(itemB);
+        checkout.scan(itemA);
+
+        int result = checkout.calculate();
+
+        assertEquals(130 + 45, result);
+    }
+
+    @Test
+    public void calculateVariousItemsWithManyRulesUnorderedTest() {
+        checkout.addItemRule(itemRuleA);
+        checkout.addItemRule(itemRuleB);
+
+        checkout.scan(itemA);
+        checkout.scan(itemA);
+        checkout.scan(itemB);
+        checkout.scan(itemA);
+        checkout.scan(itemB);
+        checkout.scan(itemC);
+        checkout.scan(itemD);
+
+        int result = checkout.calculate();
+
+        assertEquals(130 + 45 + 20 + 15, result);
+    }
+
+
 }
