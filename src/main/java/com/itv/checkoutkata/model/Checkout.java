@@ -2,6 +2,10 @@ package com.itv.checkoutkata.model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 public class Checkout {
     private List<Item> items;
@@ -48,5 +52,42 @@ public class Checkout {
             return itemRules.add(itemRule);
         }
         return false;
+    }
+
+    public int calculate() {
+        if (itemRules.isEmpty()) {
+            return items.stream()
+                    .mapToInt(i -> i.getPrice())
+                    .sum();
+        }
+
+        AtomicInteger sum = new AtomicInteger(0);
+
+        Map<String, List<Item>> itemGroups = items.stream()
+                .collect(Collectors.groupingBy(i -> i.getName()));
+
+        itemGroups.forEach((name, groupItems) -> {
+            Optional<ItemRule> itemRuleOptional = itemRules.stream()
+                    .filter(r -> r.getItemName().equals(name)).findFirst();
+
+            if (itemRuleOptional.isPresent()) {
+                ItemRule itemRule = itemRuleOptional.get();
+
+                int numberOfPromotions = groupItems.size() / itemRule.getItemCount();
+
+                if (numberOfPromotions > 0) {
+                    final int specialPrice = itemRule.getSpecialPrice();
+
+                    sum.addAndGet(numberOfPromotions * specialPrice);
+                    sum.addAndGet(groupItems.size() % itemRule.getItemCount() * specialPrice);
+                } else {
+
+                }
+            } else {
+
+            }
+        });
+
+        return sum.get();
     }
 }

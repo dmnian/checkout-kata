@@ -9,12 +9,14 @@ public class CheckoutTest {
 
     private Checkout checkout;
     private Item itemA;
+    private ItemRule itemRuleA;
 
     @Before
     public void setUp() throws Exception {
         checkout = new Checkout();
 
         itemA = new Item("A", 50);
+        itemRuleA = new ItemRule("A", 3, 130);
     }
 
     @Test
@@ -47,7 +49,7 @@ public class CheckoutTest {
 
     @Test
     public void addItemRuleSuccessTest() {
-        boolean result = checkout.addItemRule(new ItemRule("A", 3, 130));
+        boolean result = checkout.addItemRule(itemRuleA);
 
         assertTrue(result);
     }
@@ -57,5 +59,29 @@ public class CheckoutTest {
         boolean result = checkout.addItemRule(null);
 
         assertFalse(result);
+    }
+
+    @Test
+    public void calculateItemsWithoutRulesTest() {
+        checkout.scan(itemA);
+        checkout.scan(itemA);
+        checkout.scan(itemA);
+
+        int result = checkout.calculate();
+
+        assertEquals(150, result);
+    }
+
+    @Test
+    public void calculateItemsWithSingleRuleTest() {
+        checkout.addItemRule(itemRuleA);
+
+        checkout.scan(itemA);
+        checkout.scan(itemA);
+        checkout.scan(itemA);
+
+        int result = checkout.calculate();
+
+        assertEquals(130, result);
     }
 }
